@@ -1,0 +1,150 @@
+[
+      {
+            "name": "Amazon",
+            "url": "https://amazon.com"
+      },
+      {
+            "name": "Apple",
+            "url": "https://apple.com"
+      },
+      {
+            "name": "AWS",
+            "url": "https://aws.amazon.com"
+      },
+      {
+            "name": "Blizzard",
+            "url": "https://blizzard.com"
+      },
+      {
+            "name": "Cloudflare",
+            "url": "https://cloudflare.com"
+      },
+      {
+            "name": "Coinbase",
+            "url": "https://coinbase.com"
+      },
+      {
+            "name": "Discord",
+            "url": "https://discord.com"
+      },
+      {
+            "name": "DreamHost",
+            "url": "https://dreamhost.com"
+      },
+      {
+            "name": "Dropbox",
+            "url": "https://dropbox.com"
+      },
+      {
+            "name": "Evernote",
+            "url": "https://evernote.com"
+      },
+      {
+            "name": "Facebook",
+            "url": "https://facebook.com"
+      },
+      {
+            "name": "Fastly",
+            "url": "https://fastly.com"
+      },
+      {
+            "name": "Firefox",
+            "url": "https://firefox.com"
+      },
+      {
+            "name": "GitHub",
+            "url": "https://github.com"
+      },
+      {
+            "name": "GitLab",
+            "url": "https://gitlab.com"
+      },
+      {
+            "name": "GoDaddy",
+            "url": "https://godaddy.com"
+      },
+      {
+            "name": "Google",
+            "url": "https://google.com"
+      },
+      {
+            "name": "Heroku",
+            "url": "https://heroku.com"
+      },
+      {
+            "name": "LastPass",
+            "url": "https://lastpass.com"
+      },
+      {
+            "name": "MailChimp",
+            "url": "https://mailchimp.com"
+      },
+      {
+            "name": "Mailgun",
+            "url": "https://mailgun.com"
+      },
+      {
+            "name": "MaxCDN",
+            "url": "https://maxcdn.com"
+      },
+      {
+            "name": "Microsoft",
+            "url": "https://microsoft.com"
+      },
+      {
+            "name": "Namecheap",
+            "url": "https://namecheap.com"
+      },
+      {
+            "name": "Newegg",
+            "url": "https://newegg.com"
+      },
+      {
+            "name": "Okta",
+            "url": "https://okta.com"
+      },
+      {
+            "name": "Private Internet Access",
+            "url": "https://www.privateinternetaccess.com"
+      },
+      {
+            "name": "ProtonMail",
+            "url": "https://protonmail.com"
+      },
+      {
+            "name": "Reddit",
+            "url": "https://reddit.com"
+      },
+      {
+            "name": "Salesforce",
+            "url": "https://www.salesforce.com"
+      },
+      {
+            "name": "SendGrid",
+            "url": "https://sendgrid.com"
+      },
+      {
+            "name": "Slack",
+            "url": "https://slack.com"
+      },
+      {
+            "name": "SparkPost",
+            "url": "https://www.sparkpost.com"
+      },
+      {
+            "name": "Threat Stack",
+            "url": "https://www.threatstack.com"
+      },
+      {
+            "name": "Twitch",
+            "url": "https://twitch.tv"
+      },
+      {
+            "name": "Ubisoft",
+            "url": "https://ubisoft.com"
+      },
+      {
+            "name": "Yahoo!",
+            "url": "https://yahoo.com"
+      }
+]
