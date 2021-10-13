@@ -2,16 +2,15 @@ import { useCallback, useEffect, useRef } from "react";
 import QrScanner from 'qr-scanner';
 import { QrReadEvent } from "../@types/QrReadEvent";
 import * as OTPAuth from 'otpauth';
-import { hex2ascii } from "../Util/hexToAscii";
 
 
 
 export const useQrReader = (onQRRead?: (params: QrReadEvent) => void) => {
 
-    const reader = useRef(document.createElement("input"));
+    const reader = useRef<HTMLInputElement>();
 
     const selectFile = useCallback(() => {
-        reader.current.click();
+        reader.current?.click();
     }, []);
 
 
@@ -42,12 +41,10 @@ export const useQrReader = (onQRRead?: (params: QrReadEvent) => void) => {
     }, [onQRRead]);
 
     useEffect(() => {
+        reader.current = document.createElement("input");
         reader.current.type = "file";
         reader.current.accept = "image/*";
         reader.current.addEventListener("change", onFilePicked);
-        return () => {
-            reader.current.removeEventListener("change", onFilePicked);
-        }
     }, [onFilePicked]);
 
     return { selectFile };

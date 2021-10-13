@@ -43,6 +43,7 @@ export const Login: React.FC<{}> = () => {
         if((window as any)._sign_up_success) {
             (window as any)._sign_up_success = undefined;
         }
+        document.title = "OTPVault | Login";
     }, []);
 
     return (

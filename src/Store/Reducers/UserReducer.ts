@@ -10,7 +10,7 @@ export interface UserState {
 export const UserReducer = (
     state: UserState = InitialUserState,
     { type, payload }: { type: string, payload: any }
-) => {
+): UserState => {
     switch (type) {
         case SET_LOGGED_IN_ACCOUNT:
             return {

@@ -1,3 +1,5 @@
+import { OtpField } from "./OtpField";
+
 export interface Otp {
     id: string;
     name: string;
@@ -7,6 +9,8 @@ export interface Otp {
     issuer?: string;
     period?: string;
     algorithm?: string;
+
+    fields?: OtpField[];
     
     user_id: number;
     createdAt: string;

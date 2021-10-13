@@ -1,5 +1,8 @@
-import { AES, HmacSHA256, SHA256, enc} from "crypto-js";
+import { AES, HmacSHA256, SHA256} from "crypto-js";
 import { UserResponse } from "../@types/UserResponse";
+import { QueryProvider } from "../App";
+import { lockUserVault } from "../Store/Actions/UserActions";
+import { ApplicationStore } from "../Store/Store";
 import { Api, handleAxiosError } from "./Base";
 
 export const ApiCheckAuth = (): Promise<UserResponse> => {
@@ -41,6 +44,14 @@ export const UnlockVault = (password: string, key: string): Promise<CryptoJS.lib
         }
 
     })
+
+}
+export const LockVault = () => {
+
+    ApplicationStore.dispatch(lockUserVault());
+    QueryProvider.invalidateQueries("my-passwords");
+    QueryProvider.invalidateQueries("single-password");
+    QueryProvider.getQueryCache().clear();
 
 }
 

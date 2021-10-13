@@ -3,13 +3,14 @@ import {
   useColorMode,
   useColorModeValue,
   IconButton,
-  IconButtonProps,
 } from "@chakra-ui/react"
 import { FaMoon, FaSun } from "react-icons/fa"
 
-type ColorSwitcherProps = Omit<IconButtonProps, "aria-label">
+interface ColorSwitcherProps {
+  authPage?: boolean;
+}
 
-export const ColorSwitcher: React.FC<ColorSwitcherProps> = (props) => {
+export const ColorSwitcher: React.FC<ColorSwitcherProps> = ({ authPage }) => {
   const { toggleColorMode } = useColorMode()
   const text = useColorModeValue("dark", "light")
   const SwitchIcon = useColorModeValue(FaMoon, FaSun)
@@ -20,13 +21,12 @@ export const ColorSwitcher: React.FC<ColorSwitcherProps> = (props) => {
       fontSize="lg"
       variant="ghost"
       color="current"
-      position="absolute"
-      top="30px"
-      right="30px"
+      position={authPage ? "absolute" : undefined}
+      top={authPage ? "30px" : undefined}
+      right={authPage ? "30px" : undefined}
       onClick={toggleColorMode}
       icon={<SwitchIcon />}
       aria-label={`Switch to ${text} mode`}
-      {...props}
     />
   )
 }

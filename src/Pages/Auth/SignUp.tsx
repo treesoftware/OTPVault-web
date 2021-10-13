@@ -2,7 +2,7 @@ import { FormControl } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
 import { Grid, GridItem } from "@chakra-ui/layout";
 import { HiOutlineMail, HiOutlineLockClosed, HiUser } from 'react-icons/hi';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Icon from "@chakra-ui/icon";
 import { Button } from "@chakra-ui/button";
 import { useMutation } from "react-query";
@@ -29,6 +29,10 @@ export const SignUp: React.FC<{}> = () => {
                 history.push("/login");
             }
         });
+
+    useEffect(() => {
+        document.title = "OTPVault | Sign Up";
+    }, []);
 
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");

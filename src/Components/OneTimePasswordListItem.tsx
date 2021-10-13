@@ -2,15 +2,16 @@ import { useColorModeValue } from "@chakra-ui/color-mode";
 import Icon from "@chakra-ui/icon";
 import { Flex, Stack, Text } from "@chakra-ui/layout";
 import { Progress } from "@chakra-ui/progress";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback } from "react";
 import { Otp } from "../@types/Otp";
-import { AiFillCopy, AiOutlineEdit } from 'react-icons/ai';
+import { AiFillCopy } from 'react-icons/ai';
 import { decryptString } from "../Util/decryptString";
-import { IconButton } from "@chakra-ui/button";
 import { Tooltip } from "@chakra-ui/tooltip";
 import { useToast } from "@chakra-ui/toast";
 
-import * as OTPAuth from 'otpauth';
+import { useHistory } from "react-router";
+import { useGetOTP } from "../Hooks/getOTP";
+import { useClipboard } from "@chakra-ui/hooks";
 
 interface OneTimePasswordListItemProps {
     otp: Otp;
@@ -22,23 +23,21 @@ export const OneTimePasswordListItem: React.FC<OneTimePasswordListItemProps> = (
 }) => {
 
     const bgColor = useColorModeValue("gray.100", "gray.700");
+    const history = useHistory();
 
-    const OTPRef = useRef(new OTPAuth.TOTP({
-        secret: decryptString(otp.key),
-        digits: otp.digits ? parseInt(decryptString(otp.digits)) : 6,
-        period: otp.period ? parseInt(decryptString(otp.period)) : 30,
-        algorithm: otp.algorithm ? decryptString(otp.algorithm) : "SHA1"
-    }));
+    const {code, progress} = useGetOTP(
+        decryptString(otp.key), 
+        otp.digits ? decryptString(otp.digits) : undefined, 
+        otp.period ? decryptString(otp.period) : undefined, 
+        otp.algorithm ? decryptString(otp.algorithm) : undefined, 
+    )
 
-    const [code, setCode] = useState(OTPRef.current.generate());
-    const [progress, setProgress] = useState(0);
     const toast = useToast();
-
-    const timer = useRef<number>();
+    const copyCode = useClipboard(code);
 
     const onCopyCode = useCallback(async () => {
 
-        await navigator.clipboard.writeText(code);
+        copyCode.onCopy();
 
         toast({
             title: "Code Copied",
@@ -47,98 +46,61 @@ export const OneTimePasswordListItem: React.FC<OneTimePasswordListItemProps> = (
             duration: 2500,
             isClosable: true
         });
-        
 
-    }, [toast]);
 
-    const tick = useCallback(() => {
-        const prog = (100 * (1 - (((0.001 * Date.now()) / OTPRef.current.period) % 1))) | 0;
-        if(prog !== progress) {
-            if(prog < progress) {
-                setCode(OTPRef.current.generate());
-            }
-            setProgress(prog);
-        }
+    }, [copyCode, toast]);
 
-        timer.current = requestAnimationFrame(tick);
 
-    }, [progress, setProgress, setCode]);
 
-    useEffect(() => {
-        tick();
-        return () => {
-            if(timer.current) {
-                cancelAnimationFrame(timer.current);
-            }
-        }
-    }, [tick]);
-    
     return (
         <Stack
             bg={bgColor}
             borderRadius={5}
             overflow="hidden"
-            shadow="sm"
+            cursor="pointer"
+            onClick={() => {
+                history.push(`/codes/${otp.id}`)
+            }}
         >
-            <Flex 
-                p={5} 
-                alignItems="center"
-                flexWrap={{
-                    base: "wrap",
-                    md: "nowrap"
-                }}
+            <Stack
+                flexGrow={1}
+                p={5}
             >
-                <Tooltip label="Click to copy code">
-                    <Stack
-                        flexGrow={1}
-                        cursor="pointer"
-                        onClick={onCopyCode}
-                    >
-                        {
-                            otp.issuer &&
-                            <Text 
-                                fontSize="sm" 
-                                mb={-2} 
-                                fontWeight="bold" 
-                                opacity={.8} 
-                                userSelect="none"
-                                isTruncated
-                            >{decryptString(otp.issuer)}</Text>
-                        }
-                        <Text isTruncated fontSize="lg" opacity={.8} userSelect="none">{decryptString(otp.name)}</Text>
-                        <Flex alignItems="center">
-                            <Text 
-                                fontSize="3xl" 
-                                isTruncated 
-                                fontWeight="bold"
-                            >
-                                {
-                                    hidden ? "*** ***" :
-                                    
+                {
+                    otp.issuer &&
+                    <Text
+                        fontSize="sm"
+                        mb={-2}
+                        fontWeight="bold"
+                        opacity={.8}
+                        userSelect="none"
+                        isTruncated
+                    >{decryptString(otp.issuer)}</Text>
+                }
+                <Text isTruncated fontSize="lg" opacity={.8} userSelect="none">{decryptString(otp.name)}</Text>
+
+                <Flex alignItems="center">
+                    <Tooltip label="Click to copy code">
+                        <Text
+                            fontSize="3xl"
+                            isTruncated
+                            fontWeight="bold"
+                            cursor="pointer" onClick={onCopyCode}
+                        >
+                            {
+                                hidden ? "*** ***" :
+
                                     code.length > 6 ? code : `${code.substr(0, 3)} ${code.substr(3)}`
-                                }
-                            </Text>
-                            <Icon
-                                as={AiFillCopy}
-                                ml={2}
-                                opacity={.5}
-                            />
-                        </Flex>
-                    </Stack>
-                </Tooltip>
-                <Stack 
-                    width={{ base: "full", md: "auto" }} 
-                    direction={{ base: "row", md: "column" }}
-                    mt={{ base: 2, md: 0 }}
-                >
-                    <IconButton
-                        size="sm"
-                        aria-label={`Edit ${decryptString(otp.name)}`}
-                        icon={<AiOutlineEdit size={25} />}
-                        cursor="pointer"
+                            }
+                        </Text>
+                    </Tooltip>
+                    <Icon
+                        as={AiFillCopy}
+                        ml={2}
+                        opacity={.5}
                     />
-                </Stack>
-            </Flex>
+                </Flex>
+            </Stack>
             <Progress
                 value={progress}
                 size="xs"

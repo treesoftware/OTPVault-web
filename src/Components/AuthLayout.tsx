@@ -1,6 +1,7 @@
 import { Alert, AlertIcon } from "@chakra-ui/alert";
 import { Box, Container, Flex, Text } from "@chakra-ui/layout";
 import React from "react";
+import { ColorSwitcher } from "./ColorSwitcher";
 import { Logo } from "./Logo";
 
 export const AuthLayout: React.FC<{ isError: boolean; error: any; }> = ({
@@ -12,6 +13,7 @@ export const AuthLayout: React.FC<{ isError: boolean; error: any; }> = ({
         minH="100vh"
         w="100%"
     >
+        <ColorSwitcher authPage/>
         <Flex
             h="100vh"
             flexDir="column"

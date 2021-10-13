@@ -1,13 +1,17 @@
-import { Spinner, Stack } from "@chakra-ui/react";
-import { Alert, AlertIcon } from "@chakra-ui/alert";
-import { useBoolean, useDisclosure } from "@chakra-ui/hooks";
-import React, { useState } from "react";
+import { GridItem } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/hooks";
+import { useBreakpointValue } from "@chakra-ui/media-query";
+import React, { useEffect } from "react";
 import { useQuery } from "react-query";
+import { Route } from "react-router";
 import { ApiListOtps } from "../Api/Otp";
-import { DashLayout } from "../Components/DashLayout";
+import { DashboardLayout } from "../Components/Layouts/DashboardLayout";
+import { OTPList } from "../Components/OTPList";
+import { SingleCode } from "./Code";
+import { ErrorPage } from "./Error";
+import { LoadingPage } from "./Loading";
 import { CreateModal } from "../Components/Modals/CreateOtp";
-import { OneTimePasswordListItem } from "../Components/OneTimePasswordListItem";
-import { decryptString } from "../Util/decryptString";
+import { ImportFromAuthenticatorModal } from "../Components/Modals/ImportFromAuthenticator";
 
 export const Dash: React.FC<{}> = () => {
 
@@ -22,54 +26,48 @@ export const Dash: React.FC<{}> = () => {
         refetchOnMount: true,
     });
 
-    const createModal = useDisclosure();
-    const [isHidden, setIsHidden] = useBoolean();
+    const dashHomeExact = useBreakpointValue({
+        base: true,
+        lg: false
+    });
 
-    const [query, setQuery] = useState("");
+    const createCode = useDisclosure();
+    const importCodes = useDisclosure();
+
+    useEffect(() => {
+        document.title = "OTPVault | My Vault";
+    }, []);
 
     return (
-        <React.Fragment>
-            <CreateModal 
-                isOpen={createModal.isOpen}
-                onClose={createModal.onClose}
+        <DashboardLayout>
+
+            <CreateModal
+                isOpen={createCode.isOpen}
+                onClose={createCode.onClose}
             />
 
-            <DashLayout
-                onCreateModalOpen={createModal.onOpen}
+            <ImportFromAuthenticatorModal
+                isOpen={importCodes.isOpen}
+                onClose={importCodes.onClose}
+            />
 
-                codeHiddenStatus={isHidden}
-                toggleCodesHidden={setIsHidden.toggle}
-
-                searchQuery={query}
-                setSearchQuery={setQuery}
-            >
-                    {
-                        isLoading ? <Spinner /> :
-                        isError ? <Alert status="error"><AlertIcon/>{ (error as any).msg }</Alert> :
-                        !data || data.length < 1 ? <Alert status="info" borderRadius={5}><AlertIcon />You don't have any passwords saved</Alert> :
-                        <Stack>
-                            {
-                                query !== "" ? 
-                                data.filter(otp => decryptString(otp.name).indexOf(query) !== -1 || (otp.issuer && decryptString(otp.issuer).indexOf(query) !== -1) )
-                                .map(otp => (
-                                    <OneTimePasswordListItem 
-                                        key={`otp-item-${otp.id}`}
-                                        otp={otp}
-                                        hidden={isHidden}
+            <Route
+                path="/codes"
+                exact={dashHomeExact}
+                render={() =>
+                    <GridItem p={5} h="full" overflow="auto">
+                        {
+                            isLoading ? <LoadingPage /> :
+                                isError ? <ErrorPage message={(error as any).msg} /> :
+                                    <OTPList
+                                        onNewClicked={createCode.onOpen}
+                                        onImportClicked={importCodes.onOpen}
+                                        passwords={data}
                                     />
-                                ))
-                                :
-                                data.map(otp => (
-                                    <OneTimePasswordListItem 
-                                        key={`otp-item-${otp.id}`}
-                                        otp={otp}
-                                        hidden={isHidden}
-                                    />
-                                ))
-                            }
-                        </Stack>
-                    }
-            </DashLayout>
-        </React.Fragment>
+                        }
+                    </GridItem>
+                } />
+            <Route path="/codes/:id" exact component={SingleCode} />
+        </DashboardLayout>
     )
 }
